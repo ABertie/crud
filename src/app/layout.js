@@ -1,3 +1,4 @@
+import Link from "next/link";
 import "./globals.css";
 
 // required for toastify
@@ -13,6 +14,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
+        <header>
+          <Link href="/create">create</Link>
+          <Link href="/read">resd</Link>
+          <Link href="/update">update</Link>
+          <Link href="/delete">delete</Link>
+        </header>
         {children}
         <ToastContainer 
           position="bottom-left"

@@ -1,4 +1,4 @@
-export default function Delete() {
+export default function Book() {
     return(
         <></>
     )    

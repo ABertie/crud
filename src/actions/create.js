@@ -1,5 +1,7 @@
 "use server"
 
+import { connect, disconnect } from "@/lib/db"
+import BooksModel from "@/models/books"
 import { z } from "zod"
 
 const BookSchema = z.object({
@@ -16,6 +18,17 @@ export async function createBook(prevState, formData) {
     if (!validated.success) {
         return validated.error.format()
     }
+
+    connect()
+    
+    const BookDoc = new BooksModel({ 
+        title: title,
+        author: author, 
+    });
+
+    await BookDoc.save();
+
+    disconnect()
 
     return { success: true, redirect: "/create" }
 }
