@@ -3,7 +3,7 @@
 import { connect, disconnect } from "@/lib/db"
 import user from "@/models/user"
 
-export async function ReadAll() {
+export async function ReadById(id) {
 
     try {
         await connect()
@@ -13,7 +13,7 @@ export async function ReadAll() {
     }
 
     try {
-        const users = await user.find()
+        const users = await user.findById(id)
         await disconnect()
         return JSON.parse(JSON.stringify(users))
     } catch (error) {

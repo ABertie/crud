@@ -1,34 +1,46 @@
 "use server"
 
 import { connect, disconnect } from "@/lib/db"
-import BooksModel from "@/models/books"
+import user from "@/models/user"
 import { z } from "zod"
 
-const BookSchema = z.object({
-    title: z.string().min(1, { message: "Dette felt skal udfyldes" }),
-    author: z.string().min(1, { message: "Dette felt skal udfyldes" }),
+const UserValidation = z.object({
+    first: z.string().min(1, { message: "this felt must be fill" }),
+    last: z.string().min(1, { message: "this felt must be fill" }),
+    age: z.number(),
 })
 
-export async function createBook(prevState, formData) {
-    const title = formData.get("title")
-    const author = formData.get("author")
+export async function create(prevState, formData) {
+    const { first, last, age } = Object.fromEntries(formData.entries())
 
-    const validated = BookSchema.safeParse({ title, author })
+    const validated = UserValidation.safeParse({ first, last, age: Number(age) })
 
     if (!validated.success) {
-        return validated.error.format()
+        return { success: false, errors: validated.error.flatten().fieldErrors }
     }
 
-    connect()
-    
-    const BookDoc = new BooksModel({ 
-        title: title,
-        author: author, 
+    const UserDoc = new user({
+        name: {
+            first: first,
+            last: last,
+        },
+        age: age,
     });
 
-    await BookDoc.save();
+    try {
+        await connect()
+    } catch (error) {
+        console.log(error)
+        return { success: false, error: "Could not connect to database" }
+    }
 
-    disconnect()
-
-    return { success: true, redirect: "/create" }
+    try {
+        await UserDoc.save();
+        await disconnect()
+        return { success: true, redirect: "/create" }
+    } catch (error) {
+        await disconnect()
+        console.log(error)
+        return { success: false, error: "Could not create book" }
+    }
 }

@@ -3,22 +3,22 @@
 import { connect, disconnect } from "@/lib/db"
 import user from "@/models/user"
 
-export async function ReadAll() {
+export async function Delete(id) {
 
     try {
         await connect()
     } catch (error) {
         console.log(error)
-        return []
+        return false
     }
 
     try {
-        const users = await user.find()
+        await user.findByIdAndDelete(id)
         await disconnect()
-        return JSON.parse(JSON.stringify(users))
+        return true
     } catch (error) {
         await disconnect()
         console.log(error)
-        return []  
+        return false
     }
 }

@@ -1,11 +1,16 @@
+import { ReadAll } from "@/actions/read-all";
 import Link from "next/link";
 
-export default function Read() {
-    const books = []
+export default async function Read() {
+    const Users = await ReadAll()
 
-    return(
+    return (
         <ul>
-            {books.map(book => <Link href={"/read/" + book._id}><li>{book.title}</li></Link>)}
+            {Users.map(user => <li key={user._id}>
+                <Link href={`/read/${user._id}`}>
+                    {user.name.first} {user.name.last}
+                </Link>
+            </li>)}
         </ul>
     )
 }
