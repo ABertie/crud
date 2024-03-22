@@ -9,7 +9,7 @@ import Button from "../button"
 export default function DialogDelete({ user, loader, setLoader }) {
     const dialogRef = useRef(null)
 
-    async function deletehandler(id) {
+    async function deleteHandler(id) {
         if (!await Delete(id)) {
             toast.error("der skete en fejl. Prøv igen senere.")
             return
@@ -29,7 +29,7 @@ export default function DialogDelete({ user, loader, setLoader }) {
                 <p>Er du sikker på du vil slette denne User?</p>
                 <p>{user.name.first} {user.name.last}</p>
 
-                <Button onClick={() => deletehandler(user._id)}>delete</Button>
+                <Button onClick={() => deleteHandler(user._id)}>delete</Button>
                 <Button onClick={() => dialogRef.current.close()}>Annuller</Button>
             </Dialog>
         </>
